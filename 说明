@@ -1,0 +1,391 @@
+数据包捕获与分析
+实验目的
+本实验学习通过Wireshark捕捉实时网络数据包，并根据网络协议分析流程对数据包在TCP/IP各层协议中进行实际抓包分析，为网络协议分析和还原提供技术手段。
+实验要求
+参考Wireshark的工作原理，用Visual C＋＋或Eclipse或者Qt编写一个简单的数据包捕获(可选）与分析工具。
+开始抓包
+1.启动WireShark，选择要抓包的设备。这里选择以太网。
+ 
+2.开始抓包，等待一段时间后结束，停止捕获分组。
+ 
+3.将捕获的分组另存为文本，以便单独分析。注意另存为文本的时候勾选Package summary line和Include column heading选项。
+ 
+ 
+开始编程
+编程环境
+操作系统：Windows10
+开发环境：Qt5.8+MSVC2015
+注意：需要安装WinCap
+编程思路
+	读取抓到的数据包，每组数据包格式一致。因而考虑一种数据结构：
+class Package{
+	int No;
+  	  double Time;
+    	QString Source;
+    	QString Destination;
+    	QString Protocal;
+    	int Length;
+    	 QString Info;
+}
+	表示一组数据包中的数据信息。然后用QTableWidget展示所有抓取到的数据分组，并且可以通过输入关键字筛选想要查看的分组信息。最终得到的程序效果如下图所示：
+ 
+
+程序演示
+1、抓包
+1.打开程序，数据包分析程序升级版
+ 
+
+2.选择捕获选项
+ 
+3.点击选择适配器，在弹出的窗口中选择要监听的适配器
+ 
+4.点击开始监听后，开始抓包。并将抓包实时显示在表中。
+ 
+5.抓包进行中可以选择 暂停抓包，暂停之后还可以选择继续抓包 .
+2、分析包
+	1.打开程序，为了方便。分别编译了64位和32位两个版本的程序。
+ 
+ 
+为了方便运行，后续又作了更改。编译打包成可以单独运行的exe文件。
+	2.界面如下所示，点击打开文件。选择要分析的数据包
+ 
+ 
+	3.打开之后，显示相应的状态信息：提示打开文件的路径，数据包总分组数等。
+ 
+	4.点击任意单元格，即在下方的文本框里显示该单元格所在分组的具体信息。并在状态栏显示单元格的内容。
+ 
+	5.筛选功能：可以按照不同的类型对数据包进行筛选。默认勾选“Protocol”类型，在后面的输入框内输入想要查看某种协议， 输入框加入了人性化的提示功能。
+ 
+	6. 回车(Enter)或者点击“筛选”按钮都会自动将相应的分组筛选出来。如输入“TCP”,筛选出全部TCP协议的分组。
+ 
+
+	7.要想再次查看或者筛选分组，则重新输入，此时回重置表格，并且显示新的筛选分组。演示：再次筛选ARP分组：
+ 
+	8.要想重新打开或查看新的数据文件，可以直接“打开文件”。也可以“关闭文件”，关闭当前打开的数据文件。初始化程序：
+ 
+	9.关于，帮助。显示我们组成员相关信息。
+	10.退出并关闭程序。
+
+总结体会
+	从这次实验中，不仅对计算机网络各层的消息结构有了清晰的了解，而且也学会了使用wireshark来获取网络数据的方法。在使用wireshark的过程中，结合自己在本课程所学到的网络知识，加深了自己对消息转发、协议处理、数据格式等的理解，不是在二进制的层面去看这些信息，而是结合获取的二进制数据对其进行分析，首先应该确定该消息使用的协议，因为只有判断正确这些截获二进制数据的协议类型，才能正确的知道消息转发所遵循的共同语法和语义，才能真正了解这个消息的含义。因此，我们小组在进行该实验的时候，首先对现有的消息协议进行了分析和分类，有利于我们写程序是根据什么进行判断消息的协议类型，确定消息类型之后，对消息的分析就根据它遵循的协议结构进行分析，就可以清晰的得到消息每部分数据是属于什么结构，这也是指导我们核心函数工作的主要思想。在这次实际编程时，也遇到了很多的问题，我们小组通过交流，通过理解网络上的解决办法，也都得到了解决。这次实验对我的影响也很大，学会了在团队中怎样发挥自己的作用，怎么让同组的人接受和采纳自己的建议，其实在工作中沟通才最重要，再次感谢同组的伙伴。
+
+程序源码
+文件：TCP_Package_Analysis.pro
+#-------------------------------------------------
+#
+# Project created by QtCreator 2017-04-19T23:26:28
+#
+#-------------------------------------------------
+
+QT       += core gui
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+TARGET = TCP_Pakage_Analysis
+TEMPLATE = app
+# The following define makes your compiler emit warnings if you use
+# any feature of Qt which as been marked as deprecated (the exact warnings
+# depend on your compiler). Please consult the documentation of the
+# deprecated API in order to know how to port your code away from it.
+DEFINES += QT_DEPRECATED_WARNINGS
+
+# You can also make your code fail to compile if you use deprecated APIs.
+# In order to do so, uncomment the following line.
+# You can also select to disable deprecated APIs only up to a certain version of Qt.
+#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+SOURCES += main.cpp\
+        mainwindow.cpp \
+    package.cpp \
+HEADERS  += mainwindow.h \
+    package.h \
+FORMS    += mainwindow.ui
+CONFIG +=C++11
+
+文件：mainwindow.h
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
+#include <QMainWindow>
+#include <QFile>
+#include <QTableWidgetItem>
+#include <filterwidget.h>
+namespace Ui {
+class MainWindow;
+}
+class MainWindow : public QMainWindow
+{
+    Q_OBJECT
+public:
+    explicit MainWindow(QWidget *parent = 0);
+    ~MainWindow();
+    void filterExecution(QString keyWord);
+public slots:
+    void itemSelectedAndShowDetail(QTableWidgetItem *item);
+private slots:
+    void on_filterButton_clicked();
+private:
+    Ui::MainWindow *ui;
+    filterWidget *filterWindow;
+    QFile file;
+    int TotalLineOfPackage=0;
+    //QString allProtocal[9] = {"TCP","WSP","ULP","SSL","SSDP","IPv4","HTTP","DNS","Ethertype"};
+};
+#endif // MAINWINDOW_H
+
+文件mainwindow.cpp
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "package.h"
+#include <QDebug>
+#include <QFileDialog>
+#include <QDialog>
+#include <QMessageBox>
+#include <QCompleter>
+#include <QStringList>
+MainWindow::MainWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::MainWindow)
+{
+    ui->setupUi(this);
+    ui->openFile->setText(QString("Open File"));
+    ui->closeFile->setText(QString("Close File"));
+    ui->exit->setText(QString("Exit Program"));
+    ui->about->setText(QString("TCP Team"));
+    ui->progressBar->setValue(100);
+    //设置过滤输入的提示器
+    QStringList listOfProtocal;
+    listOfProtocal<<"TCP"<<"WSP"<<"ULP"<<"UDP"<<"TLSv1.2"<<"SSDP"<<"MDNS"<<"LLMNR"<<"IPv6"<<"IGMPv2"<<"ICMPv6"<<
+                    "HTTP"<<"DNS"<<"DHCPv6"<<"ARP";
+    QCompleter *completer = new QCompleter(listOfProtocal,this);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    ui->keyWord->setCompleter(completer);
+    /**
+    Open
+    打开文件并读取数据包
+    **/
+    connect(ui->openFile,&QAction::triggered,
+            [=]()
+    {
+        qDebug()<<"Open Files.";
+        QString path = QFileDialog::getOpenFileName(this,"choose package","/home","txt(*.txt)");
+        //成功打开数据包则进行后面的分析工作
+        if(path.isEmpty()!=true)
+        {
+            ui->progressBar->setValue(0);
+            file.setFileName(path);
+            //文件成功打开，继续
+            if(file.open(QIODevice::ReadOnly))
+            {
+                ui->selectedText->setText(QString(path+" opened"));
+                char buf[1024];
+                qint64 lineLength;
+                do{
+
+                    lineLength = file.readLine(buf, sizeof(buf));
+                if (lineLength != -1)
+                {
+                    //qDebug()<<buf;//已经过测试
+                    QString line(buf);
+                    Package *package = new Package(line);
+                    /**
+                      TEST CODE
+                    **/
+                    //表中插入一行
+                    ui->table->insertRow(TotalLineOfPackage);
+                    ui->table->setItem(TotalLineOfPackage,0,new QTableWidgetItem(QString("%1").arg(package->Time)));
+                    ui->table->setItem(TotalLineOfPackage,1,new QTableWidgetItem(package->Source));
+                    ui->table->setItem(TotalLineOfPackage,2,new QTableWidgetItem(package->Destination));
+                    ui->table->setItem(TotalLineOfPackage,3,new QTableWidgetItem(package->Protocal));
+                    ui->table->setItem(TotalLineOfPackage,4,new QTableWidgetItem(QString("%1").arg(package->Length)));
+                    ui->table->setItem(TotalLineOfPackage,5,new QTableWidgetItem(package->Info));
+                    ++TotalLineOfPackage;
+                    ui->progressBar->setValue(TotalLineOfPackage);
+                }
+                }while(lineLength != -1);
+                ui->progressBar->setValue(100);
+                ui->totalPackage->setText(QString("%1").arg(TotalLineOfPackage));
+                ui->filterButton->setEnabled(true);
+            }
+            else
+            {
+                ui->selectedText->setText(QString("Open file failed!"));
+            }
+        }
+    });
+    /**
+     * 效果等用于按下“筛选按钮”，回车快捷键更方便
+     * */
+    connect(ui->keyWord,&QLineEdit::returnPressed,this,&MainWindow::on_filterButton_clicked);
+    /**
+     * 重设表格，恢复上一次过滤的改变,下一次过滤继续使用
+     * */
+    connect(ui->keyWord,&QLineEdit::textEdited,
+            [=]()
+    {
+        for(int i=0;i<TotalLineOfPackage;++i)
+        {
+            ui->table->setRowHidden(i,false);
+        }
+    });
+    /**
+      About
+      关于程序
+      **/
+    connect(ui->about,&QAction::triggered,
+            [=]()
+    {
+       //
+        qDebug()<<"Show help message.";
+        QMessageBox::about(this,QString::fromLocal8Bit("TCP Team"),QString::fromLocal8Bit("ZhaoPeng  TengFei.Wang  LuGan"));
+    });
+    /**
+      Close
+      关闭当前打开的数据包文件，并初始化
+    **/
+    connect(ui->closeFile,&QAction::triggered,
+            [=]()
+    {
+        qDebug()<<"Close current files and reset window.";
+        file.close();
+        ui->keyWord->setText("");
+        ui->detail->clear();
+        ui->totalPackage->setText(" ");
+        ui->selectedText->setText(" ");
+        ui->filterButton->setEnabled(false);
+        ui->table->reset();
+        ui->progressBar->setValue(0);
+        for(int i=TotalLineOfPackage;i!=-1;--i)
+        {
+           ui->table->removeRow(i);
+        }
+        //包计数器重置
+        TotalLineOfPackage=0;
+    });
+    /**
+      Exit
+      关闭并退出程序
+    **/
+    connect(ui->exit,&QAction::triggered,
+            [=]()
+    {
+        this->close();
+    });
+    /**
+      单元格选中触发事件
+      **/
+    connect(ui->table,&QTableWidget::itemClicked,this,&MainWindow::itemSelectedAndShowDetail);
+
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+void MainWindow::itemSelectedAndShowDetail(QTableWidgetItem *item)
+{
+    QString text = item->text();
+    //qDebug()<<text;
+    ui->selectedText->setText(text);
+    int row = item->row();
+    ui->detail->setText(QString("No.%1Package Detail:").arg(row+1).toUtf8());
+    ui->detail->append(" ");
+    ui->detail->append(QString("Time:"+ui->table->item(row,0)->text()));
+    ui->detail->append(QString("Source:"+ui->table->item(row,1)->text()));
+    ui->detail->append(QString("Destination:"+ui->table->item(row,2)->text()));
+    ui->detail->append(QString("Protocal:"+ui->table->item(row,3)->text()));
+    ui->detail->append(QString("Length:"+ui->table->item(row,4)->text()));
+    ui->detail->append(QString("Info:"+ui->table->item(row,5)->text()));
+}
+
+void MainWindow::on_filterButton_clicked()
+{
+
+    if(ui->filterBox->currentIndex()==0)
+    {
+        //选中按“协议”筛选
+        QString keyWord = ui->keyWord->text();
+        if(keyWord=="")
+        {
+            QMessageBox::about(this,QString("Warming"),QString("Please Input Keyword"));
+        }
+        else
+        {
+            //"TCP","WSP","ULP","SSL","SSDP","IPv4","HTTP","DNS","Ethertype"
+            if(keyWord=="TCP")
+            {
+               filterExecution(keyWord);
+            }
+            else if(keyWord=="WSP")
+            {
+                filterExecution(keyWord);
+            }else if(keyWord=="ULP")
+            {
+               filterExecution(keyWord);
+            }else if(keyWord=="SSL")
+            {
+                filterExecution(keyWord);
+            }else if(keyWord=="SSDP")
+            {
+               filterExecution(keyWord);
+            }else if(keyWord=="IPv4")
+            {
+                filterExecution(keyWord);
+            }else if(keyWord=="HTTP")
+            {
+                filterExecution(keyWord);
+            }else if(keyWord=="DNS")
+            {
+               filterExecution(keyWord);
+            }else if(keyWord=="Ethertype")
+            {
+                filterExecution(keyWord);
+            }else if(keyWord=="ARP")
+            {
+                filterExecution(keyWord);
+            }else if(keyWord=="UDP")
+            {
+                filterExecution(keyWord);
+            }else if(keyWord=="MDNS")
+            {
+                filterExecution(keyWord);
+            }else if(keyWord=="TLSv1.2")
+            {
+                filterExecution(keyWord);
+            }else if(keyWord=="LLMNR")
+            {
+                filterExecution(keyWord);
+            }else if(keyWord=="IGMPv2")
+            {
+                filterExecution(keyWord);
+            }else if(keyWord=="ICMPv6")
+            {
+                filterExecution(keyWord);
+            }else if(keyWord=="DHCPv6")
+            {
+                filterExecution(keyWord);
+            }else
+            {
+                QMessageBox::about(this,QString::fromLocal8Bit("Nothing Found"),QString::fromLocal8Bit("No Such Package"));
+            }
+
+        }
+    }
+    else
+    {
+        QMessageBox::question(this,QString("Sorry"),QString("Only Support 'Protocal'"),QMessageBox::Close,QMessageBox::Yes);
+    }
+}
+
+void MainWindow::filterExecution(QString keyWord)
+{
+    //qDebug()<<"过滤Ethertype";
+    for(int i=0;i<TotalLineOfPackage;i++)
+    {
+        QString temp = ui->table->item(i,3)->text();
+        qDebug()<<temp;
+        if(temp!=keyWord)
+        {
+            ui->table->setRowHidden(i,true);
+        }
+
+    }
+}
+
