@@ -1,6 +1,7 @@
-#include "choosedevice.h"
+﻿#include "choosedevice.h"
 #include "ui_choosedevice.h"
 #include <QDebug>
+
 chooseDevice::chooseDevice(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::chooseDevice)
@@ -44,5 +45,6 @@ void chooseDevice::on_pushButton_clicked()
     //发出监听信号，让主窗口开始监听
     //qDebug()<<indexOfChooseAdapter;
     emit startListener(indexOfChooseAdapter);
+
     this->close();
 }

@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "package.h"
 #include <QDebug>
@@ -8,6 +8,7 @@
 #include <QCompleter>
 #include <QStringList>
 #include <QIcon>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)

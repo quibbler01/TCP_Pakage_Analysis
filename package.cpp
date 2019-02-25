@@ -1,9 +1,10 @@
-#include "package.h"
+﻿#include "package.h"
 #include <QDebug>
 Package::Package()
 {
     //  默认构造函数
 }
+
 
 Package::Package(int no, double time, QString source, QString destination,
                  QString protocal, int length, QString info)

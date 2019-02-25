@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
@@ -8,6 +8,7 @@
 #include <pcap.h>
 #include <QThread>
 #include <listener.h>
+
 namespace Ui {
 class MainWindow;
 }

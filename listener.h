@@ -1,9 +1,10 @@
-#ifndef LISTENER_H
+﻿#ifndef LISTENER_H
 #define LISTENER_H
 
 #include <QObject>
 #include <pcap.h>
 #include <package.h>
+
 /* 4字节的IP地址 */
 typedef struct ip_address{
     u_char byte1;
@@ -11,6 +12,7 @@ typedef struct ip_address{
     u_char byte3;
     u_char byte4;
 }ip_address;
+
 /* IPv4 首部 */
 typedef struct ip_header{
     u_char  ver_ihl;        // 版本 (4 bits) + 首部长度 (4 bits)
@@ -25,6 +27,7 @@ typedef struct ip_header{
     ip_address  daddr;      // 目的地址(Destination address)
     u_int   op_pad;         // 选项与填充(Option + Padding)
 }ip_header;
+
 
 class Listener : public QObject
 {
@@ -43,8 +46,10 @@ public:
     void ExecuteInListener();
     void setFlag(bool flag);
     bool FLAG=false;
+
 signals:
     void OnePackageIsReade(Package *package);
+
 public slots:
     void ReceiveInListener();
 

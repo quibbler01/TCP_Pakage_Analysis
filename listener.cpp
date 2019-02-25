@@ -1,4 +1,4 @@
-#include "listener.h"
+﻿#include "listener.h"
 #include <mainwindow.h>
 #include <QDebug>
 
@@ -40,6 +40,7 @@ void Listener::ExecuteInListener()
 //        qDebug()<<"选项填充"<<ih->op_pad;
 //        qDebug()<<header->ts.tv_usec;
         package->Time =header->ts.tv_usec;
+
         package->Source = QString("%1.%2.%3.%4")
                 .arg(ih->saddr.byte1)
                 .arg(ih->saddr.byte2)
@@ -51,7 +52,9 @@ void Listener::ExecuteInListener()
                 .arg(ih->daddr.byte3)
                 .arg(ih->daddr.byte4);
         package->Length = header->len;
+
         package->Protocal = QString("协议号:%1").arg(ih->proto);
+
         package->Info = QString("Type of service:%1,Time to live:%2,Header checksum:%3,Option+Padding:%4,Identification:%5")
                 .arg(ih->tos)
                 .arg(ih->ttl)
