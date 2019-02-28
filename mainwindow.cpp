@@ -108,7 +108,7 @@ MainWindow::MainWindow(QWidget *parent) :
     {
        //
         qDebug()<<"Show help message.";
-        QMessageBox::about(this,QString::fromLocal8Bit("TCP小组"),QString::fromLocal8Bit("赵鹏  王腾飞  甘露"));
+        QMessageBox::about(this,QString::fromLocal8Bit("TCP小组"),QString::fromLocal8Bit("赵鹏 "));
     });
     /**
       Close
@@ -347,7 +347,7 @@ void MainWindow::on_actionchoose_triggered()
                 if (d->description)
                 {
                     QString deviceDescription=QString("%1:%2").arg(d->name).arg(d->description);
-                    //qDebug()<<deviceDescription;
+                    qDebug()<<deviceDescription;
                     choose->appendItem(deviceDescription);
                 }
                 else
@@ -380,4 +380,9 @@ void MainWindow::on_actiongoon_triggered()
 void MainWindow::on_actiontishi_triggered()
 {
     QMessageBox::information(this,"Package","默认抓取5000组数据包");
+}
+
+void MainWindow::on_about_triggered()
+{
+
 }

@@ -33,21 +33,24 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     package.h \
     choosedevice.h \
-    listener.h
+    listener.h \
+    choosedevice.h
 
 
 FORMS    += mainwindow.ui \
     choosedevice.ui
 
 CONFIG +=C++11
-INCLUDEPATH +=D:/wincap/Include
 
-
-LIBS += -LD:/wincap/Lib/ -lPacket
-
-LIBS += -LD:/wincap/Lib/ -lwpcap
 
 RESOURCES += \
     image.qrc
 
 RC_FILE =icon.rc
+
+
+LIBS += -LE:/360Downloads/WpdPack_4_1_2/WpdPack/Lib/ -lwpcap
+LIBS += -LE:/360Downloads/WpdPack_4_1_2/WpdPack/Lib/ -lPacket
+
+INCLUDEPATH += E:/360Downloads/WpdPack_4_1_2/WpdPack/Include
+DEPENDPATH += E:/360Downloads/WpdPack_4_1_2/WpdPack/Include

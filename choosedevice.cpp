@@ -6,6 +6,7 @@ chooseDevice::chooseDevice(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::chooseDevice)
 {
+    qDebug()<<"constructor chooseDevice";
     ui->setupUi(this);
     connect(this,&chooseDevice::destroyed,
             [=]()
@@ -43,7 +44,7 @@ void chooseDevice::on_pushButton_clicked()
     //选定适配器并向主窗口返回所选适配器
     int indexOfChooseAdapter = ui->devicecomboBox->currentIndex();
     //发出监听信号，让主窗口开始监听
-    //qDebug()<<indexOfChooseAdapter;
+    qDebug()<<indexOfChooseAdapter;
     emit startListener(indexOfChooseAdapter);
 
     this->close();

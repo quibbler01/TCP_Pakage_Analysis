@@ -54,6 +54,7 @@ private slots:
     void on_actionstop_triggered();
     void on_actiongoon_triggered();
     void on_actiontishi_triggered();
+    void on_about_triggered();
 };
 
 #endif // MAINWINDOW_H
